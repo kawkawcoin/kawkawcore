@@ -1,0 +1,6 @@
+usr/local/bin/kawkaw-qt usr/bin
+share/pixmaps/kawkaw32.xpm usr/share/pixmaps
+share/pixmaps/kawkaw16.xpm usr/share/pixmaps
+share/pixmaps/kawkaw128.png usr/share/pixmaps
+debian/kawkaw-qt.desktop usr/share/applications
+debian/kawkaw-qt.protocol usr/share/kde4/services/

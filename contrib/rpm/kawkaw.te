@@ -1,0 +1,81 @@
+policy_module(kawkaw, 1.100.1)
+
+########################################
+#
+# Declarations
+#
+
+type kawkaw_t;
+type kawkaw_exec_t;
+init_daemon_domain(kawkaw_t, kawkaw_exec_t)
+
+permissive kawkaw_t;
+
+type kawkaw_initrc_exec_t;
+init_script_file(kawkaw_initrc_exec_t)
+
+type kawkaw_conf_t;
+files_type(kawkaw_conf_t)
+
+type kawkaw_var_lib_t;
+files_type(kawkaw_var_lib_t)
+
+type kawkaw_var_run_t;
+files_type(kawkaw_var_run_t)
+
+type kawkaw_port_t;
+corenet_port(kawkaw_port_t)
+
+########################################
+#
+# kawkaw local policy
+#
+allow kawkaw_t self:process { fork };
+
+allow kawkaw_t self:fifo_file rw_fifo_file_perms;
+allow kawkaw_t self:unix_stream_socket create_stream_socket_perms;
+
+manage_dirs_pattern(kawkaw_t, kawkaw_conf_t, kawkaw_conf_t)
+manage_files_pattern(kawkaw_t, kawkaw_conf_t, kawkaw_conf_t)
+
+manage_dirs_pattern(kawkaw_t, kawkaw_var_lib_t, kawkaw_var_lib_t)
+manage_files_pattern(kawkaw_t, kawkaw_var_lib_t, kawkaw_var_lib_t)
+files_var_lib_filetrans(kawkaw_t, kawkaw_var_lib_t, { dir file })
+
+manage_dirs_pattern(kawkaw_t, kawkaw_var_run_t, kawkaw_var_run_t)
+manage_files_pattern(kawkaw_t, kawkaw_var_run_t, kawkaw_var_run_t)
+
+sysnet_dns_name_resolve(kawkaw_t)
+corenet_all_recvfrom_unlabeled(kawkaw_t)
+
+allow kawkaw_t self:tcp_socket create_stream_socket_perms;
+corenet_tcp_sendrecv_generic_if(kawkaw_t)
+corenet_tcp_sendrecv_generic_node(kawkaw_t)
+corenet_tcp_sendrecv_all_ports(kawkaw_t)
+corenet_tcp_bind_generic_node(kawkaw_t)
+
+gen_require(`
+    type kawkaw_port_t;
+')
+allow kawkaw_t kawkaw_port_t:tcp_socket name_bind;
+
+gen_require(`
+    type kawkaw_port_t;
+')
+allow kawkaw_t kawkaw_port_t:tcp_socket name_connect;
+
+domain_use_interactive_fds(kawkaw_t)
+
+files_read_etc_files(kawkaw_t)
+
+miscfiles_read_localization(kawkaw_t)
+
+sysnet_dns_name_resolve(kawkaw_t)
+
+allow kawkaw_t kawkaw_exec_t:file execute_no_trans;
+allow kawkaw_t self:process setsched;
+corecmd_exec_ls(kawkaw_t)
+corenet_tcp_connect_http_port(kawkaw_t)
+dev_read_urand(kawkaw_t)
+fs_getattr_xattr_fs(kawkaw_t)
+kernel_read_system_state(kawkaw_t)

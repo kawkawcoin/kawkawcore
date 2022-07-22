@@ -1,0 +1,27 @@
+FROM amd64/ubuntu:latest
+
+MAINTAINER cade <cade.call@mediciventures.com>
+
+EXPOSE $RPCPORT
+
+EXPOSE $PORT
+
+RUN apt-get update && apt-get install -y bash net-tools && apt-get clean
+
+RUN useradd -ms /bin/bash kawkaw
+
+RUN mkdir /etc/kawkaw
+
+RUN mkdir /var/lib/kawkaw
+
+RUN chown kawkaw:kawkaw /etc/kawkaw /var/lib/kawkaw
+
+WORKDIR /home/kawkaw
+
+COPY --chown=kawkaw:kawkaw linux64/* /home/kawkaw/
+
+COPY --chown=kawkaw:kawkaw run.sh /home/kawkaw/
+
+USER kawkaw
+
+CMD ["/home/kawkaw/run.sh"]

@@ -1,0 +1,92 @@
+#!/sbin/runscript
+
+# backward compatibility for existing gentoo layout 
+#
+if [ -d "/var/lib/kawkaw/.kawkaw" ]; then
+	KAWKAWD_DEFAULT_DATADIR="/var/lib/kawkaw/.kawkaw"
+else
+	KAWKAWD_DEFAULT_DATADIR="/var/lib/kawkawd"
+fi
+
+KAWKAWD_CONFIGFILE=${KAWKAWD_CONFIGFILE:-/etc/kawkaw/kawkaw.conf}
+KAWKAWD_PIDDIR=${KAWKAWD_PIDDIR:-/var/run/kawkawd}
+KAWKAWD_PIDFILE=${KAWKAWD_PIDFILE:-${KAWKAWD_PIDDIR}/kawkawd.pid}
+KAWKAWD_DATADIR=${KAWKAWD_DATADIR:-${KAWKAWD_DEFAULT_DATADIR}}
+KAWKAWD_USER=${KAWKAWD_USER:-${KAWKAW_USER:-kawkaw}}
+KAWKAWD_GROUP=${KAWKAWD_GROUP:-kawkaw}
+KAWKAWD_BIN=${KAWKAWD_BIN:-/usr/bin/kawkawd}
+KAWKAWD_NICE=${KAWKAWD_NICE:-${NICELEVEL:-0}}
+KAWKAWD_OPTS="${KAWKAWD_OPTS:-${KAWKAW_OPTS}}"
+
+name="Kawkaw Core Daemon"
+description="Kawkaw cryptocurrency P2P network daemon"
+
+command="/usr/bin/kawkawd"
+command_args="-pid=\"${KAWKAWD_PIDFILE}\" \
+		-conf=\"${KAWKAWD_CONFIGFILE}\" \
+		-datadir=\"${KAWKAWD_DATADIR}\" \
+		-daemon \
+		${KAWKAWD_OPTS}"
+
+required_files="${KAWKAWD_CONFIGFILE}"
+start_stop_daemon_args="-u ${KAWKAWD_USER} \
+			-N ${KAWKAWD_NICE} -w 2000"
+pidfile="${KAWKAWD_PIDFILE}"
+
+# The retry schedule to use when stopping the daemon. Could be either
+# a timeout in seconds or multiple signal/timeout pairs (like
+# "SIGKILL/180 SIGTERM/300")
+retry="${KAWKAWD_SIGTERM_TIMEOUT}"
+
+depend() {
+	need localmount net
+}
+
+# verify
+# 1) that the datadir exists and is writable (or create it)
+# 2) that a directory for the pid exists and is writable
+# 3) ownership and permissions on the config file
+start_pre() {
+	checkpath \
+	-d \
+	--mode 0750 \
+	--owner "${KAWKAWD_USER}:${KAWKAWD_GROUP}" \
+	"${KAWKAWD_DATADIR}"
+
+	checkpath \
+	-d \
+	--mode 0755 \
+	--owner "${KAWKAWD_USER}:${KAWKAWD_GROUP}" \
+	"${KAWKAWD_PIDDIR}"
+
+	checkpath -f \
+	-o ${KAWKAWD_USER}:${KAWKAWD_GROUP} \
+	-m 0660 \
+	${KAWKAWD_CONFIGFILE}
+
+	checkconfig || return 1
+}
+
+checkconfig()
+{
+	if ! grep -qs '^rpcpassword=' "${KAWKAWD_CONFIGFILE}" ; then
+		eerror ""
+		eerror "ERROR: You must set a secure rpcpassword to run kawkawd."
+		eerror "The setting must appear in ${KAWKAWD_CONFIGFILE}"
+		eerror ""
+		eerror "This password is security critical to securing wallets "
+		eerror "and must not be the same as the rpcuser setting."
+		eerror "You can generate a suitable random password using the following "
+		eerror "command from the shell:"
+		eerror ""
+		eerror "bash -c 'tr -dc a-zA-Z0-9 < /dev/urandom | head -c32 && echo'"
+		eerror ""
+		eerror "It is recommended that you also set alertnotify so you are "
+		eerror "notified of problems:"
+		eerror ""
+		eerror "ie: alertnotify=echo %%s | mail -s \"Kawkaw Alert\"" \
+			"admin@foo.com"
+		eerror ""
+		return 1
+	fi
+}

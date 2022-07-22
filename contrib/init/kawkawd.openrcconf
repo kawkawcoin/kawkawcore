@@ -1,0 +1,33 @@
+# /etc/conf.d/kawkawd: config file for /etc/init.d/kawkawd
+
+# Config file location
+#KAWKAWD_CONFIGFILE="/etc/kawkaw/kawkaw.conf"
+
+# What directory to write pidfile to?  (created and owned by $KAWKAWD_USER)
+#KAWKAWD_PIDDIR="/var/run/kawkawd"
+
+# What filename to give the pidfile
+#KAWKAWD_PIDFILE="${KAWKAWD_PIDDIR}/kawkawd.pid"
+
+# Where to write kawkawd data (be mindful that the blockchain is large)
+#KAWKAWD_DATADIR="/var/lib/kawkawd"
+
+# User and group to own kawkawd process
+#KAWKAWD_USER="kawkaw"
+#KAWKAWD_GROUP="kawkaw"
+
+# Path to kawkawd executable
+#KAWKAWD_BIN="/usr/bin/kawkawd"
+
+# Nice value to run kawkawd under
+#KAWKAWD_NICE=0
+
+# Additional options (avoid -conf and -datadir, use flags above)
+#KAWKAWD_OPTS=""
+
+# The timeout in seconds OpenRC will wait for kawkawd to terminate
+# after a SIGTERM has been raised.
+# Note that this will be mapped as argument to start-stop-daemon's
+# '--retry' option, which means you can specify a retry schedule
+# here. For more information see man 8 start-stop-daemon.
+KAWKAWD_SIGTERM_TIMEOUT=60

@@ -1,0 +1,22 @@
+[Unit]
+Description=Kawkaw's distributed currency daemon
+After=network.target
+
+[Service]
+User=kawkaw
+Group=kawkaw
+
+Type=forking
+PIDFile=/var/lib/kawkawd/kawkawd.pid
+ExecStart=/usr/bin/kawkawd -daemon -pid=/var/lib/kawkawd/kawkawd.pid \
+-conf=/etc/kawkaw/kawkaw.conf -datadir=/var/lib/kawkawd -disablewallet
+
+Restart=always
+PrivateTmp=true
+TimeoutStopSec=60s
+TimeoutStartSec=2s
+StartLimitInterval=120s
+StartLimitBurst=5
+
+[Install]
+WantedBy=multi-user.target

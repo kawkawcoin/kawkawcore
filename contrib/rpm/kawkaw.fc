@@ -1,0 +1,8 @@
+/usr/bin/kawkaw-cli		--	gen_context(system_u:object_r:kawkaw_exec_t,s0)
+/usr/sbin/kawkawd		--	gen_context(system_u:object_r:kawkaw_exec_t,s0)
+/usr/lib(64)?/kawkaw/kawkawd		--	gen_context(system_u:object_r:kawkaw_exec_t,s0)
+
+/etc/kawkaw(/.*)?		gen_context(system_u:object_r:kawkaw_conf_t,s0)
+/var/lib/kawkaw(/.*)?		gen_context(system_u:object_r:kawkaw_var_lib_t,s0)
+
+(/var)?/run/kawkawd(/.*)?   gen_context(system_u:object_r:kawkaw_var_run_t,s0)

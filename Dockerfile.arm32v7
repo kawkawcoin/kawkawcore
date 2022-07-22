@@ -1,0 +1,23 @@
+FROM arm32v7/ubuntu:latest
+
+MAINTAINER cade <cade.call@mediciventures.com>
+
+EXPOSE $RPCPORT
+
+EXPOSE $PORT
+
+RUN useradd -ms /bin/bash kawkaw
+
+RUN mkdir /etc/kawkaw
+
+RUN mkdir /var/lib/kawkaw
+
+RUN chown kawkaw:kawkaw /etc/kawkaw /var/lib/kawkaw
+
+WORKDIR /home/kawkaw
+
+COPY --chown=kawkaw:kawkaw linux64/* ./run.sh /home/kawkaw/
+
+USER kawkaw
+
+CMD ["/home/kawkaw/run.sh"]

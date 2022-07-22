@@ -1,0 +1,13 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Kawkaw Core
+Comment=Connect to the Kawkaw P2P Network
+Comment[de]=Verbinde mit dem Kawkaw peer-to-peer Netzwerk
+Comment[fr]=Kawkaw, monnaie virtuelle cryptographique pair à pair
+Comment[tr]=Kawkaw, eşten eşe kriptografik sanal para birimi
+Exec=kawkaw-qt %u
+Terminal=false
+Type=Application
+Icon=kawkaw128
+MimeType=x-scheme-handler/kawkaw;
+Categories=Office;Finance;
