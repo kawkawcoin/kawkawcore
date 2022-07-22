@@ -42,7 +42,7 @@ About Kawkaw
 --------------
 
 Kawkaw is the currency for investors, gamers and gaming developers. 
-Kawkaw will be implemented to games such as Minecraft, Roblox and many other popular games that allows custom modifications and servers.
+
 It does not stop there, with blockchain assets, developers can implement Kawkaw assets into any game and feature it in the upcoming Kawkaw marketplace.
 
 Thank you to the Bitcoin developers.
