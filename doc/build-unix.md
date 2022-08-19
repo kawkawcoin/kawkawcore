@@ -133,7 +133,7 @@ Optional (see --with-miniupnpc and --enable-upnp-default):
 
 ZMQ dependencies (provides ZMQ API 4.x):
 
-    sudo apt-get install libzmq3-dev
+    sudo apt-get install libzmq5-dev
 
 Dependencies for the GUI: Ubuntu & Debian
 -----------------------------------------
